@@ -21,4 +21,7 @@ const usuarioSchema = new mongoose_1.Schema({
         required: [true, "Contraseña es requerida"]
     }
 });
+usuarioSchema.method("compararPassword", function (pass = '') {
+    return true;
+});
 exports.Usuario = mongoose_1.model("Usuario", usuarioSchema);
