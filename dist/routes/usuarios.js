@@ -10,11 +10,16 @@ const userRoutes = express_1.Router();
 userRoutes.post("/login", (req, res) => {
     const { email, password } = req.body;
     usuario_model_1.Usuario.findOne({ email }).then((user) => {
-        const ok = encriptar(password) == (user === null || user === void 0 ? void 0 : user.password) && user;
-        console.info(encriptar(password));
+        user = user;
+        if (user.compararPassword(password)) {
+            res.json({
+                ok: true,
+                token: 'asfasfasfasfasf',
+            });
+        }
         res.json({
-            ok,
-            msg: !ok ? "usuario no existe" : 'Success',
+            ok: false,
+            msg: "Credenciales incorrectas",
             user
         });
     }).catch((err) => {

@@ -1,6 +1,6 @@
 import express, { response } from "express";
 import { Router, Request, Response } from "express";
-import { Usuario } from "../models/usuario.model";
+import { IUsuario, Usuario } from "../models/usuario.model";
 import bcrypt from "bcrypt";
 
 
@@ -11,13 +11,18 @@ userRoutes.post("/login", (req: Request, res: Response) => {
     const  { email, password } = req.body;
 
     Usuario.findOne({email}).then((user) => {
-
-
-        const ok = encriptar( password ) == user?.password && user;
-        console.info(encriptar( password ) );
+        user = (user as IUsuario);
+        
+        if(user.compararPassword(password)){
+            res.json({
+                ok: true,
+                token: 'asfasfasfasfasf',
+            });
+        }
+       
         res.json({
-            ok,
-            msg: !ok ? "usuario no existe" : 'Success',
+            ok: false,
+            msg: "Credenciales incorrectas",
             user
         });
 
