@@ -2,6 +2,8 @@ import express, { response } from "express";
 import { Router, Request, Response } from "express";
 import { IUsuario, Usuario } from "../models/usuario.model";
 import bcrypt from "bcrypt";
+import Token from "../classes/token";
+import { verificaToken } from "../middlewares/autenticacion";
 
 
 const userRoutes:express.Router = Router();
@@ -13,19 +15,20 @@ userRoutes.post("/login", (req: Request, res: Response) => {
     Usuario.findOne({email}).then((user) => {
         user = (user as IUsuario);
         
-        if(user.compararPassword(password)){
-            res.json({
-                ok: true,
-                token: 'asfasfasfasfasf',
-            });
-        }
-       
+        const valid = user.compararPassword(password);
+
+
+        const {_id, nombre, email, avatar } = user; 
+        const token = Token.getJwtToken({_id, nombre, email, avatar });
+        
+
         res.json({
-            ok: false,
-            msg: "Credenciales incorrectas",
+            ok: valid,
+            msg: valid ? "logged ok" : "credenciales incorrectas",
+            token: valid ? token : null,
             user
         });
-
+        
     }).catch((err) => {
 
         res.json({
@@ -48,7 +51,12 @@ userRoutes.post("/create", (req: Request, res: Response) => {
         password: encriptar(password),
         avatar 
     }).then((user) => {
+
+        const {_id, nombre, email, avatar } = user; 
+        const token = Token.getJwtToken({_id, nombre, email, avatar });
+
         res.json({
+            token,
             ok: true,
             msg: "usuario creado",
             user
@@ -62,9 +70,11 @@ userRoutes.post("/create", (req: Request, res: Response) => {
     })
 })
 
+userRoutes.post("/update", [ verificaToken ],  (req: Request, res: Response) => {
+
+})
+
 
 const encriptar = (text: string) => bcrypt.hashSync(text, 10);
-
-
 
 export default userRoutes;

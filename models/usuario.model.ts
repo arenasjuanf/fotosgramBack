@@ -31,6 +31,6 @@ export interface IUsuario extends Document {
 
 usuarioSchema.method("compararPassword", function(pass: string ): boolean{
     return bcrypt.compareSync(pass, this.password) ? true : false;
-})
+});
 
 export const Usuario = model<IUsuario>("Usuario", usuarioSchema);

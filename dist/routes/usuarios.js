@@ -6,20 +6,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const usuario_model_1 = require("../models/usuario.model");
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const token_1 = __importDefault(require("../classes/token"));
+const autenticacion_1 = require("../middlewares/autenticacion");
 const userRoutes = express_1.Router();
 userRoutes.post("/login", (req, res) => {
     const { email, password } = req.body;
     usuario_model_1.Usuario.findOne({ email }).then((user) => {
         user = user;
-        if (user.compararPassword(password)) {
-            res.json({
-                ok: true,
-                token: 'asfasfasfasfasf',
-            });
-        }
+        const valid = user.compararPassword(password);
+        const { _id, nombre, email, avatar } = user;
+        const token = token_1.default.getJwtToken({ _id, nombre, email, avatar });
         res.json({
-            ok: false,
-            msg: "Credenciales incorrectas",
+            ok: valid,
+            msg: valid ? "logged ok" : "credenciales incorrectas",
+            token: valid ? token : null,
             user
         });
     }).catch((err) => {
@@ -38,7 +38,10 @@ userRoutes.post("/create", (req, res) => {
         password: encriptar(password),
         avatar
     }).then((user) => {
+        const { _id, nombre, email, avatar } = user;
+        const token = token_1.default.getJwtToken({ _id, nombre, email, avatar });
         res.json({
+            token,
             ok: true,
             msg: "usuario creado",
             user
@@ -50,6 +53,8 @@ userRoutes.post("/create", (req, res) => {
             err
         });
     });
+});
+userRoutes.post("/update", [autenticacion_1.verificaToken], (req, res) => {
 });
 const encriptar = (text) => bcrypt_1.default.hashSync(text, 10);
 exports.default = userRoutes;
