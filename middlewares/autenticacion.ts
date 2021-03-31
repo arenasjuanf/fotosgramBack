@@ -6,6 +6,13 @@ export const verificaToken = ( req: Request | any , res: Response, next: NextFun
     Token.comprobarToken( userToken ).then((decoded: any) => {
         req.usuario = decoded.usuario;
         next();
-    }).catch(console.log)
+        return;
+    }).catch( err => {
+        res.json({
+            ok:false,
+            mensaje: "token no es correcto "+err
+        })
+        return;
+    })
 
 }

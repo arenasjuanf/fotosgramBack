@@ -54,7 +54,19 @@ userRoutes.post("/create", (req, res) => {
         });
     });
 });
-userRoutes.post("/update", [autenticacion_1.verificaToken], (req, res) => {
+userRoutes.post("/update", autenticacion_1.verificaToken, (req, res) => {
+    usuario_model_1.Usuario.findByIdAndUpdate(req.usuario._id, req.body, { new: true, context: 'query' }, (err, userDB) => {
+        if (err) {
+            throw err;
+        }
+        const user = userDB;
+        const { _id, nombre, email, avatar } = user;
+        const token = token_1.default.getJwtToken({ _id, nombre, email, avatar });
+        res.json({
+            ok: true,
+            token
+        });
+    });
 });
 const encriptar = (text) => bcrypt_1.default.hashSync(text, 10);
 exports.default = userRoutes;

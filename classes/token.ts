@@ -16,7 +16,7 @@ export default class Token{
     static comprobarToken( userToken: string ){
         return new Promise((resolve, reject) => {
             jwt.verify(userToken, this.seed, ( err, decoded ) => {
-                err ? resolve(decoded) : reject(err);
+                !err ? resolve(decoded) : reject(err);
             })
         })
     }

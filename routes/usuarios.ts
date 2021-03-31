@@ -70,7 +70,29 @@ userRoutes.post("/create", (req: Request, res: Response) => {
     })
 })
 
-userRoutes.post("/update", [ verificaToken ],  (req: Request, res: Response) => {
+userRoutes.post("/update", verificaToken ,  (req: any, res: Response) => {
+
+
+    Usuario.findByIdAndUpdate(req.usuario._id, req.body , {new: true, context: 'query'}, (err, userDB) => {
+
+        
+        if(err){
+            throw err;
+        }
+
+        const user = (userDB as IUsuario);
+
+
+        const {_id, nombre, email, avatar } = user; 
+        const token = Token.getJwtToken({_id, nombre, email, avatar });
+        
+        res.json({
+            ok: true,
+            token
+        })
+
+    });
+
 
 })
 

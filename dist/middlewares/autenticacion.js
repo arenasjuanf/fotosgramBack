@@ -10,6 +10,13 @@ const verificaToken = (req, res, next) => {
     token_1.default.comprobarToken(userToken).then((decoded) => {
         req.usuario = decoded.usuario;
         next();
-    }).catch(console.log);
+        return;
+    }).catch(err => {
+        res.json({
+            ok: false,
+            mensaje: "token no es correcto " + err
+        });
+        return;
+    });
 };
 exports.verificaToken = verificaToken;

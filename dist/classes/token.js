@@ -14,7 +14,7 @@ class Token {
     static comprobarToken(userToken) {
         return new Promise((resolve, reject) => {
             jsonwebtoken_1.default.verify(userToken, this.seed, (err, decoded) => {
-                err ? resolve(decoded) : reject(err);
+                !err ? resolve(decoded) : reject(err);
             });
         });
     }

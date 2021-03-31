@@ -2,7 +2,7 @@ import Server from "./classes/server";
 import userRoutes from "./routes/usuarios";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
-
+mongoose.set('useFindAndModify', false);
 const server: Server = new Server();
 
 server.app.use( bodyParser.urlencoded({ extended: true}) );
