@@ -1,4 +1,4 @@
-import express, { response } from "express";
+import express from "express";
 import { Router, Request, Response } from "express";
 import { IUsuario, Usuario } from "../models/usuario.model";
 import bcrypt from "bcrypt";
@@ -39,7 +39,6 @@ userRoutes.post("/login", (req: Request, res: Response) => {
 
     })
 }) 
-
 
 userRoutes.post("/create", (req: Request, res: Response) => {
 

@@ -19,7 +19,7 @@ const usuarioSchema: Schema<IUsuario> = new Schema({
         type: String,
         required: [true, "Contraseña es requerida"]
     }
-});
+},{ versionKey: false });
 
 export interface IUsuario extends Document {
     nombre: string;

@@ -24,7 +24,7 @@ const usuarioSchema = new mongoose_1.Schema({
         type: String,
         required: [true, "Contraseña es requerida"]
     }
-});
+}, { versionKey: false });
 usuarioSchema.method("compararPassword", function (pass) {
     return bcrypt_1.default.compareSync(pass, this.password) ? true : false;
 });
