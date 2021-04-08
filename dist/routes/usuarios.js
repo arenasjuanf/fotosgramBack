@@ -68,5 +68,12 @@ userRoutes.post("/update", autenticacion_1.verificaToken, (req, res) => {
         });
     });
 });
+userRoutes.get("/", autenticacion_1.verificaToken, (req, res) => {
+    const usuario = req.usuario;
+    res.json({
+        ok: true,
+        usuario
+    });
+});
 const encriptar = (text) => bcrypt_1.default.hashSync(text, 10);
 exports.default = userRoutes;
